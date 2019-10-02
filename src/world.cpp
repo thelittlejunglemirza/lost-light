@@ -119,7 +119,7 @@ bool World::init(vec2 screen)
 
     m_current_speed = 1.f;
 
-    return m_character.init() && m_water.init() && m_pebbles_emitter.init() && m_shield.init();
+    return m_character.init() && m_enemy.init() && m_water.init() && m_pebbles_emitter.init() && m_shield.init();
 }
 
 // Releases all the associated resources
@@ -139,6 +139,7 @@ void World::destroy()
     m_character.destroy();
     m_shield.destroy();
     m_salmon.destroy();
+    m_enemy.destroy();
     m_pebbles_emitter.destroy();
     for (auto& projectile : m_projectiles)
         projectile.destroy();
@@ -160,7 +161,7 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 
-    // Checking Salmon - Turtle collisions
+    // Checking Character_Projectile collisions
     for (const auto& projectile : m_projectiles) {
         if (m_character.collides_with(projectile)) {
             // if (m_character.is_alive()) {
@@ -172,9 +173,9 @@ bool World::update(float elapsed_ms)
         }
     }
 
+    // Checking Shield_Projectile collisions
     for (auto& projectile : m_projectiles) {
         if (m_shield.collides_with(projectile)) {
-            fprintf(stderr, "BOOM");
             vec2 shieldDirection = m_shield.getDirection();
             vec2 projectileDirection = projectile.getDirection();
 
@@ -186,6 +187,9 @@ bool World::update(float elapsed_ms)
             continue;
         }
     }
+
+    // TODO: Implement this after impelementing enemy
+    // Checking Enemy_Projectile collisions
 
     // Checking Salmon - Turtle collisions
     // for (const auto& turtle : m_turtles)
@@ -233,6 +237,7 @@ bool World::update(float elapsed_ms)
     m_character.update(elapsed_ms);
     m_shield.set_position(m_character.get_position());
     m_shield.update(elapsed_ms);
+    m_enemy.update(elapsed_ms);
     // m_salmon.update(elapsed_ms);
     for (auto& projectile : m_projectiles)
         projectile.update(elapsed_ms * m_current_speed);
@@ -400,6 +405,7 @@ void World::draw()
     // 	fish.draw(projection_2D);
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
+    m_enemy.draw(projection_2D);
     // m_salmon.draw(projection_2D);
     for (auto& projectile : m_projectiles)
         projectile.draw(projection_2D);

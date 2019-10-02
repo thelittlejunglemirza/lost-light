@@ -1,13 +1,12 @@
 #pragma once
 
 // internal
+#include "enemy.hpp"
 #include "character.hpp"
 #include "common.hpp"
 #include "salmon.hpp"
 #include "shield.hpp"
 
-// #include "turtle.hpp"
-// #include "fish.hpp"
 #include "pebbles.hpp"
 #include "projectile.hpp"
 #include "water.hpp"
@@ -72,6 +71,7 @@ private:
     unsigned int m_points;
 
     // Game entities
+    Enemy m_enemy;
     Salmon m_salmon;
     Character m_character;
     Shield m_shield;
