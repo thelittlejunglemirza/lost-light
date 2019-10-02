@@ -241,6 +241,9 @@ bool World::update(float elapsed_ms)
     // m_salmon.update(elapsed_ms);
     for (auto& projectile : m_projectiles)
         projectile.update(elapsed_ms * m_current_speed);
+
+    for (auto& missile : m_enemy.m_missiles)
+        missile.update(elapsed_ms * m_current_speed);
     // for (auto& turtle : m_turtles)
     // 	turtle.update(elapsed_ms * m_current_speed);
     // for (auto& fish : m_fish)
@@ -409,6 +412,9 @@ void World::draw()
     // m_salmon.draw(projection_2D);
     for (auto& projectile : m_projectiles)
         projectile.draw(projection_2D);
+
+    for (auto& missile : m_enemy.m_missiles)
+        missile.draw(projection_2D);
 
     /////////////////////
     // Truely render to the screen

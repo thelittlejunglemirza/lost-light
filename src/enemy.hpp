@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "missile.hpp"
 #include <vector>
 
 // class Turtle;
@@ -9,6 +10,7 @@
 
 class Enemy : public Entity {
     static Texture enemy_texture;
+    const int MAX_Missile = 5;
 
 public:
     // Creates all the associated render resources and default transform
@@ -23,10 +25,6 @@ public:
 
     // Renders the salmon
     void draw(const mat3& projection) override;
-
-    // Collision routines for turtles and fish
-    // bool collides_with(const Turtle& turtle);
-    // bool collides_with(const Fish& fish);
 
     // Returns the current salmon position
     vec2 get_position() const;
@@ -43,15 +41,11 @@ public:
     // Kills the salmon, changing its alive state and triggering on death events
     void kill();
 
-    // Called when the salmon collides with a fish, starts lighting up the salmon
-    void light_up();
-
     vec2 get_bounding_box() const;
 
-    bool upKeyPressed;
-    bool downKeyPressed;
-    bool leftKeyPressed;
-    bool rightKeyPressed;
+    void shootMissile();
+
+    std::vector<Missile> m_missiles;
 
 private:
     float m_light_up_countdown_ms; // Used to keep track for how long the salmon should be lit up

@@ -1,30 +1,23 @@
 // Header
-#include "enemy.hpp"
 #include "missile.hpp"
 
-// stlib
-#include <algorithm>
-#include <string>
-#include<time.h>
-
 #include <cmath>
-#include<iostream>
 
-Texture Enemy::enemy_texture;
+Texture Missile::missile_texture;
 
-bool Enemy::init()
+bool Missile::init(vec2 setupPosition)
 {
     // Load shared texture
-    if (!enemy_texture.is_valid()) {
-        if (!enemy_texture.load_from_file(textures_path("enemy.png"))) {
+    if (!missile_texture.is_valid()) {
+        if (!missile_texture.load_from_file(textures_path("missile.png"))) {
             fprintf(stderr, "Failed to load projectile texture!");
             return false;
         }
     }
 
     // The position corresponds to the center of the texture
-    float wr = enemy_texture.width * 0.5f;
-    float hr = enemy_texture.height * 0.5f;
+    float wr = missile_texture.width * 0.5f;
+    float hr = missile_texture.height * 0.5f;
 
     TexturedVertex vertices[4];
     vertices[0].position = { -wr, +hr, -0.02f };
@@ -61,21 +54,20 @@ bool Enemy::init()
     if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
         return false;
 
-    // Setting initial values
-    motion.position = { 1000.f, 500.f };
     motion.radians = 0.f;
     motion.speed = 200.f;
+    set_position(setupPosition);
+    setDirection({ -1.f, 0.2f });
 
-    physics.scale = { -0.3f, 0.3f };
-
-    m_is_alive = true;
-    m_light_up_countdown_ms = -1.f;
+    // Setting initial values, scale is negative to make it face the opposite way
+    // 1.0 would be as big as the original texture.
+    physics.scale = { -0.4f, 0.4f };
 
     return true;
 }
 
 // Releases all graphics resources
-void Enemy::destroy()
+void Missile::destroy()
 {
     glDeleteBuffers(1, &mesh.vbo);
     glDeleteBuffers(1, &mesh.ibo);
@@ -86,19 +78,27 @@ void Enemy::destroy()
     glDeleteShader(effect.program);
 }
 
-// Called on each frame by World::update()
-void Enemy::update(float ms)
+void Missile::update(float ms)
 {
-    float step = (motion.speed * (ms / 1000))/2;
-
-    // Move randomly
-    srand(time(NULL));
-    move({((rand()%3) - 1) * step, ((rand()%3) - 1) * step});
-
-    shootMissile();
+    // Move fish along -X based on how much time has passed, this is to (partially) avoid
+    // having entities move at different speed based on the machine.
+    float step = 1.0 * motion.speed * (ms / 1000);
+    motion.position.x += step * motion.direction.x;
+    motion.position.y += step * motion.direction.y;
 }
 
-void Enemy::draw(const mat3& projection)
+vec2 Missile::getDirection()
+{
+    return motion.direction;
+}
+
+void Missile::setDirection(vec2 direction)
+{
+    float normal = sqrt(pow(direction.x, 2.f) + pow(direction.y, 2.f));
+    motion.direction = { direction.x / normal, direction.y / normal };
+}
+
+void Missile::draw(const mat3& projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
@@ -136,7 +136,7 @@ void Enemy::draw(const mat3& projection)
 
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, enemy_texture.id);
+    glBindTexture(GL_TEXTURE_2D, missile_texture.id);
 
     // Setting uniform values to the currently bound program
     glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
@@ -148,44 +148,19 @@ void Enemy::draw(const mat3& projection)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-vec2 Enemy::get_position() const
+vec2 Missile::get_position() const
 {
     return motion.position;
 }
 
-void Enemy::move(vec2 off)
+void Missile::set_position(vec2 position)
 {
-    motion.position.x += off.x;
-    motion.position.y += off.y;
+    motion.position = position;
 }
 
-void Enemy::set_rotation(float radians)
-{
-    motion.radians = radians;
-}
-
-bool Enemy::is_alive() const
-{
-    return m_is_alive;
-}
-
-// Called when the character collides with a turtle
-void Enemy::kill()
-{
-    m_is_alive = false;
-}
-
-void Enemy::shootMissile(){
-    if (m_missiles.size() < MAX_Missile){
-        Missile missile;
-        missile.init(get_position());
-        m_missiles.emplace_back(missile);
-    }
-} 
-
-vec2 Enemy::get_bounding_box() const
+vec2 Missile::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the projectile
     // fabs is to avoid negative scale due to the facing direction.
-    return { std::fabs(physics.scale.x) * enemy_texture.width, std::fabs(physics.scale.y) * enemy_texture.height };
+    return { std::fabs(physics.scale.x) * missile_texture.width, std::fabs(physics.scale.y) * missile_texture.height };
 }
