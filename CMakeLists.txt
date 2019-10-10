@@ -37,7 +37,6 @@ set(SOURCE_FILES
 	src/salmon.cpp
 	src/water.cpp
 	src/world.cpp
-    src/pebbles.cpp
     src/projectile.cpp
     src/shield.cpp
     src/factory.cpp
@@ -53,7 +52,6 @@ set(SOURCE_FILES
 	src/salmon.hpp
 	src/water.hpp
 	src/world.hpp
-    src/pebbles.hpp
     src/projectile.hpp
     src/shield.hpp
     src/enemy.hpp

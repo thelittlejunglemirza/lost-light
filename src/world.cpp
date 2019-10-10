@@ -122,8 +122,11 @@ bool World::init(vec2 screen)
     makeCharacter(registry);
     makeShield(registry);
 
-    return m_character.init() && m_water.init() && m_pebbles_emitter.init()
-        && m_shield.init() && m_enemy.init() && m_potion.init();
+    return m_character.init()
+        && m_water.init()
+        && m_shield.init()
+        && m_enemy.init()
+        && m_potion.init();
 }
 
 // Releases all the associated resources
@@ -145,7 +148,6 @@ void World::destroy()
     m_potion.destroy();
     m_shield.destroy();
     m_salmon.destroy();
-    m_pebbles_emitter.destroy();
     for (auto& projectile : m_projectiles)
         projectile.destroy();
     m_projectiles.clear();
@@ -517,12 +519,6 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     if (action == GLFW_RELEASE && key == GLFW_KEY_R) {
         int w, h;
         glfwGetWindowSize(m_window, &w, &h);
-        // m_salmon.destroy();
-        // m_salmon.init();
-        // m_character.destroy();
-        // m_character.init();
-        m_pebbles_emitter.destroy();
-        m_pebbles_emitter.init();
         m_projectiles.clear();
         // m_turtles.clear();
         // m_fish.clear();

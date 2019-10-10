@@ -9,13 +9,14 @@
 
 // #include "turtle.hpp"
 // #include "fish.hpp"
-#include "pebbles.hpp"
+#include "./system/InputSystem.hpp"
+
+#include "./system/PhysicsSystem.hpp"
+#include "./system/ShieldSystem.hpp"
+#include "factory.hpp"
 #include "potion.hpp"
 #include "projectile.hpp"
 #include "water.hpp"
-#include "factory.hpp"
-#include "./system/InputSystem.hpp"
-#include "./system/MovementSystem.hpp"
 
 // entt
 #include <entt/entity/registry.hpp>
@@ -87,8 +88,6 @@ private:
     Potion m_potion;
     // std::vector<Turtle> m_turtles;
     std::vector<Projectile> m_projectiles;
-    // std::vector<Fish> m_fish;
-    Pebbles m_pebbles_emitter;
 
     float m_current_speed;
     float m_next_projectile_spawn;
