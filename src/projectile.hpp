@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entity.hpp"
+#include "wall.hpp"
 
 class Projectile : public Entity {
     // Shared between all projectiles, no need to load one for each instance
@@ -26,6 +27,8 @@ public:
     void setDirection(vec2 direction);
 
     void setRotation(float rad);
+
+    bool collides_with (const Wall& wall);
 
     // Returns the current projectile position
     vec2 get_position() const;

@@ -2,6 +2,7 @@
 
 #include "entity.hpp"
 #include "potion.hpp"
+#include "wall.hpp"
 #include <entt/entity/registry.hpp>
 #include <vector>
 
@@ -30,6 +31,8 @@ public:
     bool collides_with(const Projectile& Projectile);
 
     bool collides_with(const Potion& potion);
+
+    bool collides_with (const Wall& wall);
 
     // Set character rotation in radians
     void set_rotation(float radians);

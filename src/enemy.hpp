@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entity.hpp"
+#include "wall.hpp"
 #include <vector>
 
 class Projectile;
@@ -31,6 +32,8 @@ public:
     void move(vec2 off);
 
     bool collides_with(const Projectile& Projectile);
+
+    bool collides_with (const Wall& wall);
 
     void set_target(vec2 character_pos);
 

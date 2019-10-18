@@ -2,7 +2,7 @@
 #include "enemy.hpp"
 
 #include "projectile.hpp"
-
+#include "wall.hpp"
 // stlib
 #include <algorithm>
 #include <string>
@@ -218,6 +218,20 @@ bool Enemy::collides_with(const Projectile& projectile)
     float dy = motion.position.y - projectile.get_position().y;
     float d_sq = dx * dx + dy * dy;
     float other_r = std::max(projectile.get_bounding_box().x, projectile.get_bounding_box().y);
+    float my_r = std::max(physics.scale.x, physics.scale.y);
+    float r = std::max(other_r, my_r);
+    r *= 0.6f;
+    if (d_sq < r * r)
+        return true;
+    return false;
+}
+
+bool Enemy::collides_with(const Wall& wall)
+{
+    float dx = motion.position.x - wall.get_position().x;
+    float dy = motion.position.y - wall.get_position().y;
+    float d_sq = dx * dx + dy * dy;
+    float other_r = std::max(wall.get_bounding_box().x, wall.get_bounding_box().y);
     float my_r = std::max(physics.scale.x, physics.scale.y);
     float r = std::max(other_r, my_r);
     r *= 0.6f;
