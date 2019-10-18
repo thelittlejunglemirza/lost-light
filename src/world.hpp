@@ -16,6 +16,7 @@
 #include "factory.hpp"
 #include "potion.hpp"
 #include "projectile.hpp"
+#include "wall.hpp"
 
 // entt
 #include <entt/entity/registry.hpp>
@@ -80,6 +81,7 @@ private:
     Character m_character;
     Shield m_shield;
     Potion m_potion;
+    Wall m_wall;
     std::vector<Projectile> m_projectiles;
     std::vector<Enemy> m_enemies;
 

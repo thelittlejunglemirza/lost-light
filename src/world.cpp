@@ -123,7 +123,8 @@ bool World::init(vec2 screen)
     return m_character.init()
         && m_background.init()
         && m_shield.init()
-        && m_potion.init();
+        && m_potion.init()
+        && m_wall.init();
 }
 
 // Releases all the associated resources
@@ -143,6 +144,7 @@ void World::destroy()
     m_character.destroy();
     m_potion.destroy();
     m_shield.destroy();
+    m_wall.destroy();
     for (auto& projectile : m_projectiles)
         projectile.destroy();
     m_projectiles.clear();
@@ -291,6 +293,7 @@ void World::draw()
     // Drawing entities
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
+    m_wall.draw(projection_2D);
     if (m_potion.is_alive())
         m_potion.draw(projection_2D);
     // if (m_enemy.is_alive())
