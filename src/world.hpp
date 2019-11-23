@@ -3,17 +3,24 @@
 // internal
 #include "character.hpp"
 #include "common.hpp"
+#include "data.hpp"
 #include "enemy.hpp"
+#include "menu.hpp"
 #include "shield.hpp"
+#include "wall.hpp"
+#include "wall_manager.hpp"
 
-// #include "turtle.hpp"
-// #include "fish.hpp"
-#include "./system/InputSystem.hpp"
-#include "./system/PhysicsSystem.hpp"
-#include "./system/ShieldSystem.hpp"
+#include "./system/collisionSystem.hpp"
 #include "./system/enemyAISystem.hpp"
+#include "./system/healthSystem.hpp"
+#include "./system/inputSystem.hpp"
+#include "./system/levelSystem.hpp"
+#include "./system/menuSystem.hpp"
+#include "./system/physicsSystem.hpp"
+#include "./system/soundSystem.hpp"
 #include "background.hpp"
 #include "factory.hpp"
+#include "ground.hpp"
 #include "potion.hpp"
 #include "projectile.hpp"
 
@@ -24,13 +31,22 @@
 #include <random>
 #include <vector>
 
-#define SDL_MAIN_HANDLED
-#include <SDL.h>
-#include <SDL_mixer.h>
+// Same as static in c, local to compilation unit
+namespace
+{
+namespace
+{
+void glfw_err_cb(int error, const char *desc)
+{
+    fprintf(stderr, "%d: %s", error, desc);
+}
+} // namespace
+} // namespace
 
 // Container for all our entities and game logic. Individual rendering / update is
 // deferred to the relative update() methods
-class World {
+class World
+{
 public:
     World();
     ~World();
@@ -50,19 +66,24 @@ public:
     // Should the game be over ?
     bool is_over() const;
 
+    int state;
+
+    int level;
+
+    bool debug;
+
 private:
     // generate enemies
-    bool spawn_enemy(int& id);
+    bool spawn_minion();
+    bool spawn_boss();
 
     // !!! INPUT CALLBACK FUNCTIONS
-    void on_key(GLFWwindow*, int key, int, int action, int mod);
-    void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
-    // Calculates the length of a vec2 vector
-    float lengthVec2(vec2 v);
+    void on_key(GLFWwindow *, int key, int, int action, int mod);
+    void on_mouse_move(GLFWwindow *window, double xpos, double ypos);
+    void on_mouse_key(GLFWwindow *, int key, int action, int mod);
 
-private:
     // Window handle
-    GLFWwindow* m_window;
+    GLFWwindow *m_window;
     float m_screen_scale; // Screen to pixel coordinates scale factor
 
     // Screen texture
@@ -78,20 +99,15 @@ private:
 
     // Game entities
     Character m_character;
+    Menu m_menu;
     Shield m_shield;
     Potion m_potion;
+    Ground m_ground;
+
     std::vector<Projectile> m_projectiles;
     std::vector<Enemy> m_enemies;
-
-    // id assigned to enemies
-    int enemy_number;
-
-    float m_current_speed;
-    float m_next_enemy_spawn;
-
-    Mix_Music* m_background_music;
-    Mix_Chunk* m_character_dead_sound;
-    Mix_Chunk* m_character_eat_sound;
+    WallManager m_wall_manager;
+    std::vector<Wall> m_walls;
 
     // C++ rng
     std::default_random_engine m_rng;
@@ -99,7 +115,11 @@ private:
 
     InputSystem inputSystem;
     PhysicsSystem physicsSystem;
-    ShieldSystem shieldSystem;
     EnemyAISystem enemyAI;
+    HealthSystem healthSystem;
+    MenuSystem menuSystem;
+    SoundSystem soundSystem;
+    CollisionSystem collisionSystem;
+    LevelSystem levelSystem;
     entt::registry registry;
 };

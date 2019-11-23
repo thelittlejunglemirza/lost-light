@@ -2,6 +2,7 @@
 
 #include "entity.hpp"
 #include "potion.hpp"
+#include "projectile.hpp"
 #include <entt/entity/registry.hpp>
 #include <vector>
 
@@ -38,22 +39,13 @@ public:
 
     void set_scale(vec2 scale);
 
-    bool is_alive() const;
+    void set_distortion(vec2 distortion);
 
-    void kill();
+    void set_sheer(float sheer);
 
     vec2 get_bounding_box() const;
 
-    void setAlive(bool status);
-
-    bool upKeyPressed;
-    bool downKeyPressed;
-    bool leftKeyPressed;
-    bool rightKeyPressed;
-
 private:
-    bool m_is_alive; // True if the character is alive=
-
     std::vector<Vertex> m_vertices;
     std::vector<uint16_t> m_indices;
     entt::registry registry;

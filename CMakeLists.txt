@@ -31,40 +31,75 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/project_path.hpp.in" "${CMAKE_CU
 # file(GLOB SOURCE_FILES src/*.cpp src/*.hpp)
 
 set(SOURCE_FILES
-	src/main.cpp
-	src/character.cpp
-	src/common.cpp
-	src/background.cpp
-	src/world.cpp
-  src/projectile.cpp
-  src/shield.cpp
-  src/entity.cpp
-  src/factory.cpp
-  src/enemy.cpp
-  src/potion.cpp
-  src/project_path.hpp
-	src/character.hpp
-	src/common.hpp
-	src/background.hpp
-	src/world.hpp
-  src/projectile.hpp
-  src/shield.hpp
-  src/entity.hpp
-  src/enemy.hpp
-  src/potion.hpp
-  # Component
-  src/components/inputKeyboard.hpp
-  src/components/inputMouse.hpp
-  src/components/motionComponent.hpp
-  src/components/characterComponent.hpp
-  src/components/physicsScaleComponent.hpp
-  src/components/shieldComponent.hpp
-  src/components/enemyComponent.hpp
-  # System
-  src/system/InputSystem.cpp
-  src/system/ShieldSystem.cpp
-  src/system/PhysicsSystem.cpp
-  src/system/enemyAISystem.cpp
+    src/main.cpp
+    src/character.cpp
+    src/common.cpp
+    src/background.cpp
+    src/world.cpp
+    src/projectile.cpp
+    src/shield.cpp
+    src/entity.cpp
+    src/factory.cpp
+    src/enemy.cpp
+    src/menu.cpp
+    src/potion.cpp
+    src/ground.cpp
+    src/path.cpp
+    src/line.cpp
+    src/triangle.cpp
+    src/wall_manager.cpp
+    src/wall.cpp
+
+    # System
+    src/system/inputSystem.cpp
+    src/system/physicsSystem.cpp
+    src/system/enemyAISystem.cpp
+    src/system/healthSystem.cpp
+    src/system/collisionSystem.cpp
+    src/system/menuSystem.cpp
+    src/system/soundSystem.cpp
+    src/system/levelSystem.cpp
+
+    src/project_path.hpp
+    src/character.hpp
+    src/common.hpp
+    src/background.hpp
+    src/world.hpp
+    src/projectile.hpp
+    src/shield.hpp
+    src/entity.hpp
+    src/enemy.hpp
+    src/menu.hpp
+    src/potion.hpp
+    src/ground.hpp
+    src/data.hpp
+    src/path.hpp
+    src/line.hpp
+    src/triangle.hpp
+    src/wall_manager.hpp
+    src/wall.hpp
+    # Component
+    src/components/inputKeyboard.hpp
+    src/components/inputMouse.hpp
+    src/components/motionComponent.hpp
+    src/components/characterComponent.hpp
+    src/components/physicsScaleComponent.hpp
+    src/components/shieldComponent.hpp
+    src/components/enemyComponent.hpp
+    src/components/menuComponent.hpp
+    src/components/projectileComponent.hpp
+    src/components/potionComponent.hpp
+    src/components/groundComponent.hpp
+    src/components/levelComponent.hpp
+    # System
+    src/system/inputSystem.hpp
+    src/system/physicsSystem.hpp
+    src/system/enemyAISystem.hpp
+    src/system/collisionSystem.hpp
+    src/system/healthSystem.hpp
+    src/system/menuSystem.hpp
+    src/system/soundSystem.hpp
+    src/system/levelSystem.hpp
 )
 
 if (IS_OS_MAC)
@@ -111,6 +146,8 @@ if (IS_OS_LINUX OR IS_OS_MAC)
        target_link_libraries(${PROJECT_NAME} PUBLIC ${COCOA_LIBRARY} ${CF_LIBRARY})
     endif()
 elseif (IS_OS_WINDOWS)
+    find_package(EnTT CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC EnTT)
 # https://stackoverflow.com/questions/17126860/cmake-link-precompiled-library-depending-on-os-and-architecture
     set(GLFW_FOUND TRUE)
     set(SDL2_FOUND TRUE)

@@ -8,24 +8,20 @@ class Projectile : public Entity {
 
 public:
     // Creates all the associated render resources and default transform
-    bool init();
+    bool init(int id);
 
     // Releases all the associated resources
     void destroy();
-
-    // Update projectile due to current
-    // ms represents the number of milliseconds elapsed from the previous update() call
-    void update(float ms);
 
     // Renders the projectile
     // projection is the 2D orthographic projection matrix
     void draw(const mat3& projection) override;
 
-    vec2 getDirection();
+    vec2 get_direction();
 
-    void setDirection(vec2 direction);
+    void set_direction(vec2 direction);
 
-    void setRotation(float rad);
+    void set_rotation(float rad);
 
     // Returns the current projectile position
     vec2 get_position() const;
@@ -35,4 +31,11 @@ public:
 
     // Returns the projectile' bounding box for collision detection, called by collides_with()
     vec2 get_bounding_box() const;
+
+    void set_scale(vec2 scale);
+
+    int get_id() const;
+
+private:
+    int projectile_id;
 };

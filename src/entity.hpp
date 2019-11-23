@@ -44,6 +44,7 @@ struct Entity {
     // projection contains the orthographic projection matrix. As every Entity::draw()
     // renders itself it needs it to correctly bind it to its shader.
     virtual void draw(const mat3& projection) = 0;
+    virtual void draw(const mat3& projection, bool debug=false) {};
 
 protected:
     // A Mesh is a collection of a VertexBuffer and an IndexBuffer. A VAO
@@ -78,6 +79,8 @@ protected:
     // and so contextually belongs here (for now).
     struct Physics {
         vec2 scale;
+        vec2 distortion;
+        float sheer;
     } physics;
 
     // Transform component handles transformations passed to the Vertex shader.
@@ -90,6 +93,7 @@ protected:
         void scale(vec2 scale);
         void rotate(float radians);
         void translate(vec2 offset);
+        void sheer(float angle);
         void end();
     } transform;
 };

@@ -1,7 +1,11 @@
 #pragma once
 
 #include "entity.hpp"
+#include "projectile.hpp"
 #include <vector>
+#include "triangle.hpp"
+#include "path.hpp"
+#include "data.hpp"
 
 class Projectile;
 
@@ -21,6 +25,7 @@ public:
 
     // Renders the enemy
     void draw(const mat3& projection) override;
+    void draw(const mat3& projection, bool debug) override;
 
     // Returns the current enemy position
     vec2 get_position() const;
@@ -32,32 +37,36 @@ public:
 
     bool collides_with(const Projectile& Projectile);
 
-    void set_target(vec2 character_pos);
+    bool collides_with_point(Dot d);
+
+    void set_scale(vec2 scale);
 
     // Set enemy rotation in radians
     void set_rotation(float radians);
 
-    // True if the enemy is alive
-    bool is_alive() const;
-
-    // Kills the enemy, changing its alive state and triggering on death events
-    void kill();
-    void respawn();
-
     vec2 get_bounding_box() const;
-
-    Projectile shoot_projectile();
-
-    vec2 target;
 
     vec2 get_face_position();
 
     int get_id();
 
+    void update_triangle();
+
+    bool on_sight(vec2 target);
+
+    bool set_line(vec2 target, std::vector<Enemy>& m_enemies);
+    void unset_line();
+
+    void alert();
+    void search();
+    void idle();
+
 private:
-    float m_remain_dead_countdown_ms; // Used to keep track for how long the enemy should be lit up
-    bool m_is_alive; // True if the enemy is alive
     int enemy_id;
+    bool has_path;
+
+    Triangle trig;
+    Path path;
 
     std::vector<Vertex> m_vertices;
     std::vector<uint16_t> m_indices;

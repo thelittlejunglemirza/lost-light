@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entity.hpp"
+#include "projectile.hpp"
 #include <vector>
 
 class Projectile;
@@ -29,7 +30,7 @@ public:
 
     void hide();
 
-    vec2 getDirection();
+    vec2 get_direction();
 
     vec2 get_bounding_box() const;
 
